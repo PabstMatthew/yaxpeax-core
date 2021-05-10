@@ -1094,16 +1094,14 @@ fn get_effect(contexts: &MergedContextTable, instr: &yaxpeax_x86::long_mode::Ins
 pub fn get_cfg<M>(
     data: &M,
     contexts: &MergedContextTable,
-    entrypoints: Vec<u64>,
+    entrypoint: u64,
     switch_targets: Option<&HashMap<u64, std::vec::Vec<i64>>>,
 ) -> (VW_CFG,u32) where M: MemoryRange<u64>,
 {
     let mut cfg_builder = VW_CFG_Builder::new(entrypoint, switch_targets);
     let mut to_explore: VecDeque<u64> = VecDeque::new();
     let mut seen: HashSet<u64> = HashSet::new();
-    for entrypoint in &entrypoints {
-        to_explore.push_back(entrypoint);
-    }
+    to_explore.push_back(entrypoint);
 
     while let Some(addr) = to_explore.pop_front() {
         let dests = cfg_builder.process_job(data, contexts, addr);
