@@ -833,7 +833,9 @@ pub fn check_cfg_integrity(blocks: &BTreeMap<u64, VW_Block>, graph: &GraphMap<u6
             if addr == a2 {continue};
             let before = block.end < b2.start;
             let after = block.start > b2.end;
-            if !(before || after) {
+            let inside = (b2.start >= block.start && b2.end <= block.end) ||
+                         (block.start >= b2.start && block.end <= b2.end);
+            if !(before || after || inside) {
                 println!("{:?} {:?}", block.as_str(), b2.as_str());
                 assert!(false);
             }
